@@ -2,7 +2,7 @@ onload = () => {
 	const canvas = document.getElementById('canvas1');
 	const ctx = canvas.getContext('2d');
 	canvas.width = 1500;
-	canvas.height = 500;
+	canvas.height = 1500;
 
 	class InputHandler {
 		constructor(game) {
@@ -92,13 +92,28 @@ onload = () => {
 	class Enemy {}
 	class Layer {}
 	class Background {}
-	class UI {}
+	class UI {
+		constructor(game) {
+			this.game = game;
+			this.fontSize = 25;
+			this.fontFamily = 'Helvetica';
+			this.color = 'yellow';
+		}
+		draw(context) {
+			//ammo
+			context.fillStyle = this.color;
+			for (let i = 0; i < this.game.ammo; i++) {
+				context.fillRect(20 + 5 * i, 50, 3, 20);
+			}
+		}
+	}
 	class Game {
 		constructor(width, height) {
 			this.width = width;
 			this.height = height;
 			this.player = new Player(this);
 			this.input = new InputHandler(this);
+			this.ui = new UI(this);
 			this.keys = [];
 			this.ammo = 20;
 			this.maxAmmo = 50;
@@ -116,6 +131,7 @@ onload = () => {
 		}
 		draw(context) {
 			this.player.draw(context);
+			this.ui.draw(context);
 		}
 	}
 
