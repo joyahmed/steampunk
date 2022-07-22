@@ -15,7 +15,7 @@ onload = () => {
       this.height = 190;
       this.x = 20;
       this.y = 100;
-      this.speedY = 0;
+      this.speedY = 1;
     }
     update () {
       this.y += this.speedY
@@ -43,4 +43,14 @@ onload = () => {
   }
 
   const game = new Game(canvas.width, canvas.height);
+  // animation loop
+  function animate () {
+    ctx.clearRect(0, 0, canvas.width, canvas.height)
+    game.update();
+    game.draw(ctx);
+    requestAnimationFrame(animate)
+  }
+
+  animate();
+
 };
