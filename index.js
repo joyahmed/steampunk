@@ -9,9 +9,8 @@ onload = () => {
 			this.game = game;
 			window.addEventListener('keydown', e => {
 				if (
-					e.key === 'ArrowUp' ||
-					(e.key === 'ArrowDown' &&
-						this.game.keys.indexOf(e.key) === -1)
+					(e.key === 'ArrowUp' || e.key === 'ArrowDown') &&
+					this.game.keys.indexOf(e.key) === -1
 				) {
 					this.game.keys.push(e.key);
 				} else if (e.key === ' ') {
@@ -82,12 +81,12 @@ onload = () => {
 			});
 		}
 		shootTop() {
-      if (this.game.ammo > 0) {
-  			this.projectiles.push(
-          new Projectile(this.game, this.x, this.y)
-        );
-        this.game.ammo--;
-}
+			if (this.game.ammo > 0) {
+				this.projectiles.push(
+					new Projectile(this.game, this.x, this.y)
+				);
+				this.game.ammo--;
+			}
 		}
 	}
 	class Enemy {}
@@ -102,9 +101,18 @@ onload = () => {
 			this.input = new InputHandler(this);
 			this.keys = [];
 			this.ammo = 20;
+			this.maxAmmo = 50;
+			this.ammoTimer = 0;
+			this.ammoInterval = 500;
 		}
-		update() {
+		update(deltaTime) {
 			this.player.update();
+			if (this.ammoTimer > this.ammoInterval) {
+				if (this.ammo < this.maxAmmo) this.ammo++;
+				this.ammoTimer = 0;
+			} else {
+				this.ammoTimer += deltaTime;
+			}
 		}
 		draw(context) {
 			this.player.draw(context);
@@ -112,13 +120,16 @@ onload = () => {
 	}
 
 	const game = new Game(canvas.width, canvas.height);
+	let lastTime = 0;
 	// animation loop
-	function animate() {
+	function animate(timeStamp) {
+		const deltaTime = timeStamp - lastTime;
+		lastTime = timeStamp;
 		ctx.clearRect(0, 0, canvas.width, canvas.height);
-		game.update();
+		game.update(deltaTime);
 		game.draw(ctx);
 		requestAnimationFrame(animate);
 	}
 
-	animate();
+	animate(0);
 };
