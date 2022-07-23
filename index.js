@@ -93,7 +93,7 @@ onload = () => {
 		constructor(game) {
 			this.game = game;
 			this.x = this.game.width;
-			this.speedX = Math.random() * -1.5 - 0.5;
+			this.speedX = Math.random() * -2.5 - 0.5;
 			this.markedForDeletion = false;
 			this.lives = 5;
 			this.score = this.lives;
@@ -127,19 +127,44 @@ onload = () => {
 			this.fontFamily = 'Helvetica';
 			this.color = 'white';
 		}
-		draw (context) {
+		draw(context) {
 			context.save();
 			context.fillStyle = this.color;
 			context.shadowOffsetX = 2;
 			context.shadowOffsetY = 2;
-			context.shadowColor = 'black'
+			context.shadowColor = 'black';
 			context.font = this.fontSize + 'px ' + this.fontFamily;
 			//score
-			context.fillText('Score: ' + this.game.score, 20, 40)
+			context.fillText('Score: ' + this.game.score, 20, 40);
 			//ammo
 			context.fillStyle = this.color;
 			for (let i = 0; i < this.game.ammo; i++) {
 				context.fillRect(20 + 5 * i, 50, 3, 20);
+			}
+			// game over messages
+			if (this.game.gameOver) {
+				context.textAlign = 'center';
+				let message1;
+				let message2;
+				if (this.game.score > this.game.winningScore) {
+					message1 = 'You Win!';
+					message2 = 'Well done!';
+				} else {
+					message1 = 'You Lose!';
+					message2 = 'Better luck next time!';
+				}
+				context.font = '50px ' + this.fontFamily;
+				context.fillText(
+					message1,
+					this.game.width * 0.5,
+					this.game.height * 0.5 - 40
+				);
+				context.font = '25px ' + this.fontFamily;
+				context.fillText(
+					message2,
+					this.game.width * 0.5,
+					this.game.height * 0.5 + 40
+				);
 			}
 			context.restore();
 		}
